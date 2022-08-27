@@ -3,7 +3,7 @@
 ---
 
 # **Deploy**
-[RESTy - netlify](https://todo-app-omarsawalmeh.netlify.app/)
+[ToDo App - netlify](https://todo-app-v02.netlify.app/)
 
 ---
 
