@@ -3,7 +3,7 @@
 ---
 
 # **Deploy**
-[ToDo App - netlify](https://todo-app-v02.netlify.app/)
+[ToDo App - netlify](https://todo-app-v03.netlify.app/)
 
 ---
 
@@ -16,10 +16,11 @@ The todo list app we’ll build in this tutorial will be pretty basic. A user ca
 - UseEffect
 - Test React
 - Bootstrap
+- Local Storge
 
 ## **Summary of work:**
 - ### **Add Todo List as a card**
-   ![](./todo_app/asset/app.png)
+   ![](./todo_app/asset/app-v03.png)
 
 
 
