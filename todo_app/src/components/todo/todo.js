@@ -40,7 +40,7 @@ const ToDo = () => {
   const [incomplete, setIncomplete] = useState([])
   //const [completeTask, setCompleteTask] = useState(false)
   //const [status, setStatus] = useState({id:'', status:false})
-  const [count, setCount] = useState(getLoacalStorageCount())
+  const [count, setCount] = useState(0)
 
   // lab32
   const [countCard, setCountCard] = useState(7)
