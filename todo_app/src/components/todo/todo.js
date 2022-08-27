@@ -8,6 +8,26 @@ import {SettingsContext} from '../context/settings'
 
 import './todo.css'
 
+const getLoacalStorage = ()=>{
+  let list = localStorage.getItem('list');
+  if(list){
+    return JSON.parse(localStorage.getItem('list'))
+  }
+  else{
+    return []
+  }
+}
+
+const getLoacalStorageCount = ()=>{
+  let count = localStorage.getItem('count');
+  if(count){
+    return count
+  }
+  else{
+    return 0
+  }
+}
+
 const ToDo = () => {
   const settings = useContext(SettingsContext)
   //console.log('---', settings.itemScreen)
@@ -16,11 +36,14 @@ const ToDo = () => {
     difficulty: 3,
   })
   const [pageNumber, setPageNumber] = useState(1);
-  const [list, setList] = useState([])
+  const [list, setList] = useState(getLoacalStorage())
   const [incomplete, setIncomplete] = useState([])
   //const [completeTask, setCompleteTask] = useState(false)
   //const [status, setStatus] = useState({id:'', status:false})
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(getLoacalStorageCount())
+
+  // lab32
+  const [countCard, setCountCard] = useState(7)
 
 
 
@@ -33,11 +56,19 @@ const ToDo = () => {
   const [lastCard, setLastCard] = useState(settings.itemScreen)
 
   function addItem(item) {
-    item.id = uuid()
-    item.complete = false
+
+    
+    if(count < countCard){
+      setCount(count + 1)
+      item.id = uuid()
+      item.complete = false
+      setList([...list, item])
+    }
+    
     //console.log(item)
-    setCount(count + 1);
-    setList([...list, item])
+    // console.log('---->', countCard)
+    // console.log(' counts---->', count)
+   
   }
 
   function deleteItem(id) {
@@ -52,7 +83,11 @@ const ToDo = () => {
         item.complete = !item.complete
         console.log(item.complete)
         //setStatus({id: item.id, status:item.complete});
-        setCount(count - 1)
+        if (item.complete) {
+          setCount(count - 1)
+        } else {
+          setCount(count + 1)
+        }
       }
       //return item
     })
@@ -125,6 +160,14 @@ const ToDo = () => {
     setLastCard(settings.itemScreen)
   }, [settings.itemScreen])
 
+  useEffect(() => {
+    localStorage.setItem('list', JSON.stringify(list))
+  }, [list])
+
+  useEffect(() => {
+    localStorage.setItem('count', JSON.stringify(count))
+  }, [count])
+
   //console.log('-4-4-4--4-4--44--4', incomplete.length)
   return (
     <>
@@ -173,8 +216,23 @@ const ToDo = () => {
               Add Item
             </button>
           </label>
-          <label class="container">Check All
-           <input type="checkbox" onClick={h}></input>
+          <br />
+          <label>
+            How many To Do Items to show at once: 
+            <input
+              type='number'
+              name='amount'
+              id='amount'
+              value={countCard}
+              onChange={(e) => {
+                //console.log(e.target.value)
+                setCountCard(e.target.value)
+              }}
+            />
+          </label>
+          <label class='container'>
+            Check All
+            <input type='checkbox' onClick={h}></input>
           </label>
         </form>
 
