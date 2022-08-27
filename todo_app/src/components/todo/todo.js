@@ -10,7 +10,7 @@ import './todo.css'
 
 const ToDo = () => {
   const settings = useContext(SettingsContext)
-  console.log('---', settings.itemScreen)
+  //console.log('---', settings.itemScreen)
 
   const [defaultValues] = useState({
     difficulty: 3,
@@ -18,7 +18,11 @@ const ToDo = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [list, setList] = useState([])
   const [incomplete, setIncomplete] = useState([])
-  const [completeTask, setCompleteTask] = useState(false)
+  //const [completeTask, setCompleteTask] = useState(false)
+  //const [status, setStatus] = useState({id:'', status:false})
+  const [count, setCount] = useState(0)
+
+
 
   const { handleChange, handleSubmit } = useForm(addItem, defaultValues)
   
@@ -32,6 +36,7 @@ const ToDo = () => {
     item.id = uuid()
     item.complete = false
     //console.log(item)
+    setCount(count + 1);
     setList([...list, item])
   }
 
@@ -42,13 +47,16 @@ const ToDo = () => {
 
   function toggleComplete(id) {
     const items = list.map((item) => {
+      console.log(item.complete)
       if (item.id == id) {
         item.complete = !item.complete
+        console.log(item.complete)
+        //setStatus({id: item.id, status:item.complete});
+        setCount(count - 1)
       }
-      return item
+      //return item
     })
-
-    return setList(items)
+    //return setList(items)
   }
 
   useEffect(() => {
@@ -83,10 +91,34 @@ const ToDo = () => {
     }
   }
 
-  function handleHide() {
-      settings.setDisplayComplete(!settings.displayComplete)
-  }
+  // function handleHide() {
+  //     settings.setDisplayComplete(!settings.displayComplete)
+  // }
 
+  // const handleStatus = (id)=>{
+  //   console.log(list)
+  //   console.log(id);
+  //   let t = list.filter((item)=>item.id===id);
+  //   console.log(t)
+  //   t.complete = true
+  //   console.log('sssd', t)
+  //   if(t){
+  //     if (status === 'pending') {
+  //       setStatus('complete')
+  //     }
+  //     if (status === 'complete') {
+  //       setStatus('pending')
+  //     }
+  //   }
+
+  // }
+
+  const h = ()=>{
+    const items = list.map((item) => {
+        item.complete = !item.complete
+        setCount(count - 1)
+    })
+  }
 
   useEffect(() => {
     setFirstCard(0)
@@ -98,7 +130,7 @@ const ToDo = () => {
     <>
       <section className='form'>
         <header>
-          <h1>To Do List: {incomplete.length} items pending</h1>
+          <h1>To Do List: {count} items pending</h1>
         </header>
 
         <form onSubmit={handleSubmit}>
@@ -141,21 +173,29 @@ const ToDo = () => {
               Add Item
             </button>
           </label>
+          <label class="container">Check All
+           <input type="checkbox" onClick={h}></input>
+          </label>
         </form>
 
         {pageStructure().map((item) => (
           <div key={item.id}>
-            {settings.hide === false || item.complete === false ? (
+            {
               <>
                 <p></p>
 
                 <hr />
 
-                <div class='card'>
-                  <div class='card-header'>pending</div>
-                  <div class='card-body'>
-                    <p class='card-title'>Item: {item.text}</p>
-                    <p class='card-text'>
+                <div className='card' key={item.id}>
+                  <div
+                    className={item.complete ? 'card-complete' : 'card-pending'}
+                    key={item.id}
+                  >
+                    {item.complete ? 'complete' : 'pending'}
+                  </div>
+                  <div className='card-body' key={item.id}>
+                    <p className='card-title'>Item: {item.text}</p>
+                    <p className='card-text'>
                       <p>
                         <small>Assigned to: {item.assignee}</small>
                       </p>
@@ -165,13 +205,17 @@ const ToDo = () => {
                     </p>
                     <Button onClick={() => deleteItem(item.id)}>Delete</Button>
                     <br />
-                    <a href='#' class='btn btn-primary'>
-                      Go somewhere
-                    </a>
+                    <br />
+                    <button
+                      className='btn btn-primary'
+                      onClick={() => toggleComplete(item.id)}
+                    >
+                      Change Status
+                    </button>
                   </div>
                 </div>
               </>
-            ) : null}
+            }
           </div>
         ))}
 
