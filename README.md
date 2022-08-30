@@ -3,7 +3,7 @@
 ---
 
 # **Deploy**
-[ToDo App - netlify](https://todo-app-v04.netlify.app/)
+[ToDo App - netlify](https://todo-app-v06.netlify.app/)
 
 ---
 
