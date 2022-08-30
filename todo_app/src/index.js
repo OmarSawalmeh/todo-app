@@ -1,14 +1,13 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
+
 import App from './App.js'
 
-
-import { createRoot } from 'react-dom/client'
 class Main extends React.Component {
   render() {
     return <App />
   }
 }
 
-const container = document.getElementById('root')
-const root = createRoot(container) 
-root.render(<Main tab='home' />)
+const rootElement = document.getElementById('root')
+ReactDOM.render(<Main />, rootElement)
