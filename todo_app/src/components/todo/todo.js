@@ -5,8 +5,11 @@ import useForm from '../../hooks/form.js'
 import { v4 as uuid } from 'uuid'
 
 import {SettingsContext} from '../context/settings'
-
+import { AuthContext } from '../auth/auth'
 import './todo.css'
+
+import { LoginContext } from '../auth/context'
+
 
 const getLoacalStorage = ()=>{
   let list = localStorage.getItem('list');
@@ -29,8 +32,16 @@ const getLoacalStorageCount = ()=>{
 }
 
 const ToDo = () => {
+  const AuthTest = useContext(AuthContext)
+  const capability = AuthTest.capability;
+
+
+
+
+
   const settings = useContext(SettingsContext)
   //console.log('---', settings.itemScreen)
+  // console.log('333333333333333333', settings)
 
   const [defaultValues] = useState({
     difficulty: 3,
@@ -49,6 +60,14 @@ const ToDo = () => {
 
   const { handleChange, handleSubmit } = useForm(addItem, defaultValues)
   
+
+  const Authntication = useContext(LoginContext)
+  console.log('66666666666666', Authntication);
+  // if (Authntication.UserName_Password == '') {
+  //  window.location.href = '/'
+  // }
+  // const { capabilities } = Authntication.UserName_Password
+  // let CheckCapipilty = capabilities.search('create')
 
   // Page Structure
   // 1 -> 3 in page 1 // 4 -> 6 in page 2 // ans so on ...
@@ -175,66 +194,69 @@ const ToDo = () => {
         <header>
           <h1>To Do List: {count} items pending</h1>
         </header>
+        {capability === 'update' ? (
+          <form onSubmit={handleSubmit}>
+            <h2 data-testid='add'>Add To Do Item</h2>
 
-        <form onSubmit={handleSubmit}>
-          <h2 data-testid='add'>Add To Do Item</h2>
+            <label>
+              <span>To Do Item</span>
+              <input
+                onChange={handleChange}
+                name='text'
+                type='text'
+                placeholder='Item Details'
+              />
+            </label>
 
-          <label>
-            <span>To Do Item</span>
-            <input
-              onChange={handleChange}
-              name='text'
-              type='text'
-              placeholder='Item Details'
-            />
-          </label>
+            <label>
+              <span>Assigned To</span>
+              <input
+                onChange={handleChange}
+                name='assignee'
+                type='text'
+                placeholder='Assignee Name'
+              />
+            </label>
 
-          <label>
-            <span>Assigned To</span>
-            <input
-              onChange={handleChange}
-              name='assignee'
-              type='text'
-              placeholder='Assignee Name'
-            />
-          </label>
+            <label>
+              <span>Difficulty</span>
+              <input
+                onChange={handleChange}
+                defaultValue={defaultValues.difficulty}
+                type='range'
+                min={1}
+                max={5}
+                name='difficulty'
+              />
+            </label>
 
-          <label>
-            <span>Difficulty</span>
-            <input
-              onChange={handleChange}
-              defaultValue={defaultValues.difficulty}
-              type='range'
-              min={1}
-              max={5}
-              name='difficulty'
-            />
-          </label>
-
-          <label>
-            <button type='submit' className='btn btn-success'>
-              Add Item
-            </button>
-          </label>
-          <br />
-          <label>
-            How many To Do Items to show at once: 
-            <input
-              type='number'
-              name='amount'
-              id='amount'
-              value={countCard}
-              onChange={(e) => {
-                //console.log(e.target.value)
-                setCountCard(e.target.value)
-              }}
-            />
-          </label>
-          <label class='container'>
-            Check All
-            <input type='checkbox' onClick={h}></input>
-          </label>
-        </form>
+            <label>
+              <button type='submit' className='btn btn-success'>
+                Add Item
+              </button>
+            </label>
+            <br />
+            <label>
+              How many To Do Items to show at once:
+              <input
+                type='number'
+                name='amount'
+                id='amount'
+                value={countCard}
+                onChange={(e) => {
+                  //console.log(e.target.value)
+                  setCountCard(e.target.value)
+                }}
+              />
+            </label>
+            <label class='container'>
+              Check All
+              <input type='checkbox' onClick={h}></input>
+            </label>
+          </form>
+        ) : (
+          <div></div>
+        )}
 
         {pageStructure().map((item) => (
           <div key={item.id}>
@@ -261,7 +283,10 @@ const ToDo = () => {
                         <small>Difficulty: {item.difficulty}</small>
                       </p>
                     </p>
+                    {capability === 'create'?
                     <Button onClick={() => deleteItem(item.id)}>Delete</Button>
+                    : <div></div>
+                    }
                     <br />
                     <br />
                     <button
